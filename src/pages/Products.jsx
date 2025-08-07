@@ -12,7 +12,7 @@ export default function Products() {
   const highlightId = searchParams.get("highlight");
 
   const allCategories = useMemo(() => {
-    return ["全部", ...categoryOrder];
+    return [t("all"), ...categoryOrder];
   }, []);
 
   const [category, setCategory] = useState(categoryFromURL);
@@ -25,7 +25,7 @@ export default function Products() {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">
-      <aside className="sticky top-4 max-h-[50vh] overflow-auto bg-base-100 rounded-box shadow-xl p-4 w-60">
+      <aside className="sticky top-4 max-h-[65vh] overflow-auto bg-base-100 rounded-box shadow-xl p-4 w-60">
         <ul className="menu menu-vertical gap-2">
           {allCategories.map((cat) => (
             <button

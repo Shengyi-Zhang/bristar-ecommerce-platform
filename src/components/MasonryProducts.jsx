@@ -1,6 +1,7 @@
 import Masonry from "react-masonry-css";
 import { useState, useMemo, useEffect } from "react";
 import { Join, Button } from "react-daisyui";
+import { useTranslation } from "react-i18next";
 
 export default function MasonryProducts({
   products,
@@ -13,14 +14,14 @@ export default function MasonryProducts({
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
   const perPage = 6;
-
+  const { t } = useTranslation();
   const filteredSorted = useMemo(() => {
     const normalizedSearch = searchTerm
       .replace(/\s+/g, " ")
       .trim()
       .toLowerCase();
     let filtered =
-      category === "全部"
+      category === t("all")
         ? products
         : products.filter((p) => p.category === category);
 
@@ -61,9 +62,9 @@ export default function MasonryProducts({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
         <h2 className="text-2xl font-bold">
           {searchTerm.trim()
-            ? `Search Results for "${searchTerm.trim()}", ${
+            ? `${t("searchResultFor")} "${searchTerm.trim()}", ${
                 filteredSorted.length
-              } items found`
+              } ${t("itemFound")}`
             : category}
         </h2>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
@@ -73,7 +74,7 @@ export default function MasonryProducts({
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              setSearchParams({ category: "全部" });
+              setSearchParams({ category: t("all") });
             }}
             className="input input-bordered input-sm w-full sm:w-64"
           />
@@ -101,7 +102,7 @@ export default function MasonryProducts({
           <div
             key={p.id}
             className={`card cursor-pointer transition shadow-lg hover:shadow-xl h-[350px] w-full max-w-sm mx-auto ${
-              p.id === highlightId ? "ring-2 ring-accent" : ""
+              p.id === highlightId ? "ring-2 ring-black" : ""
             }`}
             onClick={() => {
               setSearchTerm("");

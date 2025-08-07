@@ -1,5 +1,51 @@
 // src/data/products.js
 export const productData = [
+  // === New ===
+  {
+    id: "black-rice-congee",
+    code: "DRTW001.3",
+    name: "CC BLACK RICE CONGEE",
+    desc: "24can/320ml",
+    cdesc: "親親紫米八寶粥",
+    image: "/assets/beverage/black-rice-congee.jpeg",
+    category: "New Item",
+  },
+  {
+    id: "matcha-bubble-tea",
+    code: "DRTW007.2",
+    name: "CC MATCHA BUBBLE TEA",
+    desc: "24can/315ml",
+    cdesc: "親親綠茶珍珠奶茶",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "New Item",
+  },
+  {
+    id: "mung-bean",
+    code: "DRTW003",
+    name: "CC MUNG BEAN",
+    desc: "24can/320ml",
+    cdesc: "親親薏仁綠豆",
+    image: "/assets/beverage/mung-bean.png",
+    category: "New Item",
+  },
+  {
+    id: "brown-sugar-bubble-tea",
+    code: "DRTW007",
+    name: "CC BROWN SUGAR BUBBLE TEA",
+    desc: "24can/315ml",
+    cdesc: "親親黑糖珍珠奶茶",
+    image: "/assets/beverage/brown-sugar-bubble-tea.png",
+    category: "New Item",
+  },
+  {
+    id: "lotus-pickled-red-ginger",
+    code: "AGTH101",
+    name: "LOTUS PICKLED RED GINGER",
+    desc: "24jar/454g",
+    cdesc: "蓮花醋紅薑片",
+    image: "/assets/canned/lotus-pickled-red-ginger.png",
+    category: "New Item",
+  },
   // === Beverage ===
   {
     id: "rock-mountain",
@@ -443,11 +489,12 @@ export const productData = [
 
 // Category order for rendering UI
 export const categoryOrder = [
+  "New Item",
   "Beverage",
   "Canned and Dried",
   "Grains and Beans",
   "Houseware",
-  "Health and Beauty",
+
   "Joss",
   "Noodle",
   "Sauce and Paste",

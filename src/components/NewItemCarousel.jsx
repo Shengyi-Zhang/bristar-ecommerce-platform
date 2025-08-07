@@ -1,49 +1,37 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-
-const items = [
-  {
-    name: "CC BLACK RICE CONGEE",
-    img: "/assets/beverage/black-rice-congee.jpeg",
-  },
-  { name: "CC GRASS JELLY", img: "/assets/beverage/grass-jelly.jpeg" },
-  { name: "LOTUS OATMEAL", img: "/assets/beverage/lotus-oatmeal.jpeg" },
-  { name: "Lactasoy Drink", img: "/assets/beverage/lactasoy-large.jpeg" },
-  { name: "Rock Mountain Soda", img: "/assets/beverage/rock-mountain.jpg" },
-  { name: "More Products", img: "/assets/beverage/black-rice-congee.jpeg" },
-];
+import { productData } from "../data/products";
+import { Link } from "react-router-dom";
 
 export default function NewItemsCarousel() {
   const scrollRef = useRef(null);
   const [paused, setPaused] = useState(false);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+
+  const newItems = productData.filter((item) => item.category === "New Item");
 
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
 
     let animationId;
-    let accumulated = 0; // Sub-pixel scroll tracker
+    let accumulated = 0;
     const SCROLL_SPEED = 0.2;
 
     const step = () => {
       if (!paused && el) {
         accumulated += SCROLL_SPEED;
-
-        // Scroll by the integer part of accumulated
         const moveBy = Math.floor(accumulated);
         if (moveBy > 0) {
           el.scrollLeft += moveBy;
           accumulated -= moveBy;
         }
 
-        // Looping logic
         if (el.scrollLeft >= el.scrollWidth / 2) {
           el.scrollLeft = 0;
           accumulated = 0;
         }
       }
-
       animationId = requestAnimationFrame(step);
     };
 
@@ -73,21 +61,26 @@ export default function NewItemsCarousel() {
           className="inline-flex gap-6 px-2 py-4"
           style={{ width: "max-content" }}
         >
-          {/* Duplicate items twice for smooth infinite scroll */}
-          {[...items, ...items].map((item, i) => (
-            <div
+          {[...newItems, ...newItems].map((item, i) => (
+            <Link
+              to="/products?category=New%20Item"
               key={i}
-              className="min-w-[240px] md:min-w-[300px] bg-base-100 rounded-box shadow hover:shadow-xl transition duration-300 overflow-hidden flex-shrink-0"
+              className="min-w-[240px] md:min-w-[300px] flex-shrink-0"
             >
-              <img
-                src={item.img}
-                alt={item.name}
-                className="h-48 w-full object-contain bg-gray-50"
-              />
-              <div className="p-3 text-center text-sm font-medium text-gray-700">
-                {item.name}
+              <div
+                key={i}
+                className="min-w-[240px] md:min-w-[300px] bg-base-100 rounded-box shadow hover:shadow-xl transition duration-300 overflow-hidden flex-shrink-0"
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="h-48 w-full object-contain bg-gray-50"
+                />
+                <div className="p-3 text-center text-sm font-medium text-gray-700">
+                  {item.name}
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

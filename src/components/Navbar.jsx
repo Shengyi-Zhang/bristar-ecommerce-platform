@@ -23,6 +23,9 @@ const Navbar = () => {
               <summary>{t("products")}</summary>
               <ul className="p-2 bg-base-100 z-[1] shadow rounded-box w-52">
                 <li>
+                  <Link to="/products?category=New Item">{t("new item")}</Link>
+                </li>
+                <li>
                   <Link to="/products?category=Beverage">{t("beverage")}</Link>
                 </li>
                 <li>
