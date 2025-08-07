@@ -362,30 +362,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Houseware",
   },
-  // From: ecb2dd3d-ef84-45b2-8803-014b5b99863b.pdf
-
-  // === Health and Beauty ===
-  {
-    id: "medicated-oil",
-    code: "HBCN001",
-    name: "WHITE FLOWER MEDICATED OIL",
-    desc: "12btl/20ml",
-    cdesc: "白花油",
-    image: "/assets/beverage/matcha-bubble-tea.png",
-    category: "Health and Beauty",
-  },
-  // From: 06d573c7-7c70-4389-ae8b-1703803bb4d0.pdf
-
-  {
-    id: "tiger-balm",
-    code: "HBCN002",
-    name: "TIGER BALM RED OINTMENT",
-    desc: "12box/30g",
-    cdesc: "红虎标膏",
-    image: "/assets/beverage/matcha-bubble-tea.png",
-    category: "Health and Beauty",
-  },
-  // From: 06d573c7-7c70-4389-ae8b-1703803bb4d0.pdf
 
   // === Joss ===
   {

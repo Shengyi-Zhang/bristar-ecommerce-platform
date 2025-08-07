@@ -19,7 +19,7 @@
   "newItem": "貨品上新",
   "new item": "貨品上新",
   "ourBrand": "我們的品牌",
-  "homeContactTitle": "正在尋找亞洲商品？",
+  "contactTitle": "正在尋找亞洲商品？",
   "homeContactInfo": "歡迎聯繫我們，探索我們完整的產品目錄。",
   "homeContact": "聯絡我們",
   "searchResultFor": "正在搜尋: ",
@@ -27,5 +27,6 @@
   "adress": "地址",
   "phone": "電話",
   "fax": "傳真",
-  "email": "電子郵箱"
+  "email": "電子郵箱",
+  "brand": "品牌"
 }

@@ -68,7 +68,9 @@ const Navbar = () => {
               </ul>
             </details>
           </li>
-
+          <li>
+            <Link to="/brands">{t("brand")}</Link>
+          </li>
           <li>
             <Link to="/contact">{t("contact")}</Link>
           </li>
