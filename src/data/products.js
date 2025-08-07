@@ -56,35 +56,150 @@ export const productData = [
     category: "Beverage",
   },
 
+  // From: 67a6759d-e951-4802-8c07-15e24bc84c8f.pdf
+  {
+    id: "mung-bean",
+    code: "DRTW003",
+    name: "CC MUNG BEAN",
+    desc: "24can/320ml",
+    cdesc: "親親薏仁綠豆",
+    image: "/assets/beverage/mung-bean.png",
+    category: "Beverage",
+  },
+  // From: 67a6759d-e951-4802-8c07-15e24bc84c8f.pdf
+  {
+    id: "matcha-bubble-tea",
+    code: "DRTW007.2",
+    name: "CC MATCHA BUBBLE TEA",
+    desc: "24can/315ml",
+    cdesc: "親親綠茶珍珠奶茶",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Beverage",
+  },
+  // From: 67a6759d-e951-4802-8c07-15e24bc84c8f.pdf
+  {
+    id: "brown-sugar-bubble-tea",
+    code: "DRTW007",
+    name: "CC BROWN SUGAR BUBBLE TEA",
+    desc: "24can/315ml",
+    cdesc: "親親黑糖珍珠奶茶",
+    image: "/assets/beverage/brown-sugar-bubble-tea.png",
+    category: "Beverage",
+  },
+  {
+    id: "mix-fruit-juice",
+    code: "DRTW009.1",
+    name: "CC MIX FRUIT JUICE",
+    desc: "24can/490ml",
+    cdesc: "親親綜合果汁",
+    image: "/assets/beverage/mix-fruit-juice.png",
+    category: "Beverage",
+  },
   // === Canned and Dried ===
   {
-    id: "sweet-radish-dice",
-    code: "AGCN002.1",
-    name: "SWEET PRESERVED RADISH DICE",
-    desc: "600g/250g",
-    cdesc: "甘丹菜甜蘿蔔粒",
-    image: "/assets/canned/sweet-radish-dice.jpg",
-    category: "Canned and Dried",
-  },
-  {
-    id: "salted-radish-strip",
-    code: "AGCN002",
-    name: "SWEET PRESERVED RADISH STRIP",
-    desc: "600g/250g",
-    cdesc: "甘丹菜鹹蘿蔔條",
-    image: "/assets/canned/salted-radish-strip.jpg",
-    category: "Canned and Dried",
-  },
-  {
-    id: "shiitake-mushroom",
-    code: "AGCN010.1",
+    id: "dried-mushroom",
+    code: "AGCN010.2",
     name: "DRIED MUSHROOM",
-    desc: "8oz/3-4cm",
+    desc: "16oz 4-5cm",
     cdesc: "冬菇",
-    image: "/assets/canned/dried-mushroom.jpg",
+    image: "/assets/canned/dried-mushroom.png",
+    category: "Canned and Dried",
+  },
+  {
+    id: "hunsty-dried-bamboo-leaf",
+    code: "AGCN200",
+    name: "HUNSTY DRIED BAMBOO LEAF",
+    desc: "40bg/340g",
+    cdesc: "合時牌大竹葉",
+    image: "/assets/canned/hunsty-dried-bamboo-leaf.png",
+    category: "Canned and Dried",
+  },
+  {
+    id: "sumacco-sm-sardine-in-tomato-sauce",
+    code: "AGTH001",
+    name: "SUMACCO Sm SARDINE IN TOMATO SAUCE",
+    desc: "50can/125g",
+    cdesc: "茄汁沙丁魚",
+    image: "/assets/canned/sumacco-sm-sardine-in-tomato-sauce.png",
     category: "Canned and Dried",
   },
 
+  {
+    id: "lotus-pickled-red-ginger",
+    code: "AGTH101",
+    name: "LOTUS PICKLED RED GINGER",
+    desc: "24jar/454g",
+    cdesc: "蓮花醋紅薑片",
+    image: "/assets/canned/lotus-pickled-red-ginger.png",
+    category: "Canned and Dried",
+  },
+  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
+
+  {
+    id: "lotus-tamarind-leave-sm",
+    code: "AGTH102.2",
+    name: "LOTUS TAMARIND LEAVE (Sm)",
+    desc: "24jar/454g",
+    cdesc: "蓮花醋酸子葉",
+    image: "/assets/canned/lotus-tamarind-leave-sm.png",
+    category: "Canned and Dried",
+  },
+  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
+
+  {
+    id: "lotus-pickled-red-chili",
+    code: "AGTH110",
+    name: "LOTUS PICKLED RED CHILI",
+    desc: "24jar/454g",
+    cdesc: "蓮花醋紅辣椒",
+    image: "/assets/canned/lotus-pickled-red-chili.png",
+    category: "Canned and Dried",
+  },
+  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
+
+  {
+    id: "pickled-mustard",
+    code: "AGCN014",
+    name: "PICKLED MUSTARD GREEN",
+    desc: "24bags/400g",
+    cdesc: "酸菜包",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Canned and Dried",
+  },
+  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
+
+  {
+    id: "fried-gluten",
+    code: "AGCN015",
+    name: "FRIED GLUTEN BALLS",
+    desc: "24cans/280g",
+    cdesc: "炸面筋罐头",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Canned and Dried",
+  },
+  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
+
+  {
+    id: "fermented-tofu",
+    code: "AGCN016",
+    name: "FERMENTED TOFU CUBE",
+    desc: "24bottles/250g",
+    cdesc: "南乳腐乳",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Canned and Dried",
+  },
+  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
+
+  {
+    id: "soybean-sheets",
+    code: "AGCN017",
+    name: "DRIED SOYBEAN SHEETS",
+    desc: "10pkgs/200g",
+    cdesc: "干豆腐皮",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Canned and Dried",
+  },
+  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
   // === Grains and Beans ===
   {
     id: "chickpeas",
@@ -92,7 +207,7 @@ export const productData = [
     name: "DRIED CHICK PEAS",
     desc: "18bg/907g",
     cdesc: "加拿大雞眼豆",
-    image: "/assets/grains/chickpeas.jpg",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Grains and Beans",
   },
   {
@@ -101,7 +216,7 @@ export const productData = [
     name: "SPLIT MUNG BEANS",
     desc: "25kg",
     cdesc: "黃色綠豆瓣",
-    image: "/assets/grains/mung-beans.jpg",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Grains and Beans",
   },
   {
@@ -110,39 +225,121 @@ export const productData = [
     name: "LOTUS DRIED HONEY DATES",
     desc: "240g/8oz",
     cdesc: "蓮一機蜜棗",
-    image: "/assets/grains/honey-dates.jpg",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Grains and Beans",
   },
 
+  {
+    id: "red-kidney-bean",
+    code: "NTCN101",
+    name: "RED KIDNEY BEANS",
+    desc: "18pkg/900g",
+    cdesc: "红腰豆",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Grains and Beans",
+  },
+  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
+
+  {
+    id: "green-beans",
+    code: "NTCN102",
+    name: "WHOLE GREEN BEANS",
+    desc: "25kg",
+    cdesc: "整绿豆",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Grains and Beans",
+  },
+  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
+
+  {
+    id: "lotus-seed",
+    code: "NTCN103",
+    name: "DRIED LOTUS SEEDS",
+    desc: "20pkg/200g",
+    cdesc: "干莲子",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Grains and Beans",
+  },
+  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
+
+  {
+    id: "red-beans",
+    code: "NTCN104",
+    name: "RED AZUKI BEANS",
+    desc: "25kg",
+    cdesc: "红豆",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Grains and Beans",
+  },
+  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
+
+  {
+    id: "raw-peanut-with-skin",
+    code: "NTCN003.2",
+    name: "RAW PEANUT WITH SKIN",
+    desc: "50bg/320g",
+    cdesc: "珠豆花生",
+    image: "/assets/beverage/raw-peanut-with-skin.png",
+    category: "Grains and Beans",
+  },
+  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
+
+  {
+    id: "barley",
+    code: "NTCN106",
+    name: "PEARL BARLEY",
+    desc: "25kg",
+    cdesc: "薏米",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Grains and Beans",
+  },
+  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
+
+  {
+    id: "glutinous-rice",
+    code: "NTCN107",
+    name: "WHITE GLUTINOUS RICE",
+    desc: "25kg",
+    cdesc: "糯米",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Grains and Beans",
+  },
+  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
   // === Houseware ===
+
   {
-    id: "clamshell-box-001",
-    code: "TKCN050",
-    name: "BAMBOO CLAMSHELL BOX",
-    desc: "8x8x3 (001)",
-    cdesc: "環保盒",
-    image: "/assets/houseware/clamshell-001.jpg",
+    id: "eco-napkin",
+    code: "TKCN058",
+    name: "ECO PAPER NAPKIN",
+    desc: "200pcs/pack",
+    cdesc: "环保纸巾",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Houseware",
   },
-  {
-    id: "compartment-tray",
-    code: "TKCN050.6",
-    name: "BAMBOO 5 COMPARTMENT TRAY",
-    desc: "8x11 (007)",
-    cdesc: "環保餐盒",
-    image: "/assets/houseware/compartment-tray.jpg",
-    category: "Houseware",
-  },
+  // From: ecb2dd3d-ef84-45b2-8803-014b5b99863b.pdf
+
   // === Health and Beauty ===
   {
-    id: "joss-tho-dia",
-    code: "JSCN001.1",
-    name: "TRADITIONAL BY DATE CHI CUNG THO DIA",
-    desc: "100g/4oz",
-    cdesc: "正宗拜地主",
-    image: "/assets/joss/joss-tho-dia.jpg",
+    id: "medicated-oil",
+    code: "HBCN001",
+    name: "WHITE FLOWER MEDICATED OIL",
+    desc: "12btl/20ml",
+    cdesc: "白花油",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Health and Beauty",
   },
+  // From: 06d573c7-7c70-4389-ae8b-1703803bb4d0.pdf
+
+  {
+    id: "tiger-balm",
+    code: "HBCN002",
+    name: "TIGER BALM RED OINTMENT",
+    desc: "12box/30g",
+    cdesc: "红虎标膏",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Health and Beauty",
+  },
+  // From: 06d573c7-7c70-4389-ae8b-1703803bb4d0.pdf
 
   // === Joss ===
   {
@@ -151,7 +348,7 @@ export const productData = [
     name: "TRADITIONAL BY DATE CHI CUNG THO DIA",
     desc: "100g/4oz",
     cdesc: "正宗拜地主",
-    image: "/assets/joss/joss-tho-dia.jpg",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Joss",
   },
   {
@@ -160,7 +357,7 @@ export const productData = [
     name: "TRADITIONAL BY DONG TIEN CUNG ONG TROI",
     desc: "100g/4oz",
     cdesc: "正宗拜天",
-    image: "/assets/joss/joss-dong-tien.jpg",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Joss",
   },
   {
@@ -169,57 +366,92 @@ export const productData = [
     name: "TRADITIONAL BY JOE GUIN CUNG ONG TAO",
     desc: "100g/4oz",
     cdesc: "正宗拜灶君",
-    image: "/assets/joss/joss-joe-guin.jpg",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Joss",
   },
   // === Noodle ===
   {
-    id: "1",
+    id: "bean-vermicelli",
     code: "NDCN002.1",
     name: "CN LUNKOW BEAN VERMICELLI",
     desc: "30bg/500g",
     cdesc: "中国 龙口粉丝",
-    image: "/assets/joss/joss-joe-guin.jpg",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Noodle",
   },
+  // From: 2396c99f-dde1-4d99-bdd4-5c31dd384553.pdf
+
+  {
+    id: "ramen",
+    code: "NDCN003",
+    name: "DRIED INSTANT RAMEN",
+    desc: "24pk/100g",
+    cdesc: "方便面",
+    image: "/assets/beverage/matcha-bubble-tea.png",
+    category: "Noodle",
+  },
+  // From: 2396c99f-dde1-4d99-bdd4-5c31dd384553.pdf
+
   // === Sauce and Paste ===
   {
-    id: "2",
+    id: "beef-paste",
     code: "SATH201",
     name: "PK INSTANT BEEF PASTE",
     desc: "24btl/454g",
     cdesc: "泊宽牛肉汤酱",
-    image: "/assets/joss/joss-joe-guin.jpg",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Sauce and Paste",
   },
-  // === Seaoning and Spice ===
+  // From: 2396c99f-dde1-4d99-bdd4-5c31dd384553.pdf
+
+  // === Seasoning and Spice ===
   {
-    id: "3",
-    code: "JSCN001.5",
-    name: "TRADITIONAL BY JOE GUIN CUNG ONG TAO",
-    desc: "100g/4oz",
-    cdesc: "正宗拜灶君",
-    image: "/assets/joss/joss-joe-guin.jpg",
+    id: "five-spice",
+    code: "SPCN001",
+    name: "FIVE SPICE POWDER",
+    desc: "60btl/30g",
+    cdesc: "五香粉",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Seasoning and Spice",
   },
+  // From: 2396c99f-dde1-4d99-bdd4-5c31dd384553.pdf
+
   // === Snack ===
   {
-    id: "4",
-    code: "JSCN001.5",
-    name: "TRADITIONAL BY JOE GUIN CUNG ONG TAO",
-    desc: "100g/4oz",
-    cdesc: "正宗拜灶君",
-    image: "/assets/joss/joss-joe-guin.jpg",
+    id: "shrimp-chips",
+    code: "SNVN001",
+    name: "PRAWN FLAVORED CHIPS",
+    desc: "30pkg/60g",
+    cdesc: "越南虾片",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Snack",
   },
+  // From: 2396c99f-dde1-4d99-bdd4-5c31dd384553.pdf
+
   // === Tea ===
   {
-    id: "5",
-    code: "JSCN001.5",
-    name: "TRADITIONAL BY JOE GUIN CUNG ONG TAO",
-    desc: "100g/4oz",
-    cdesc: "正宗拜灶君",
-    image: "/assets/joss/joss-joe-guin.jpg",
+    id: "jasmine-tea",
+    code: "TECN001",
+    name: "JASMINE GREEN TEA",
+    desc: "24box/100bags",
+    cdesc: "茉莉花茶",
+    image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Tea",
   },
+  // From: 2396c99f-dde1-4d99-bdd4-5c31dd384553.pdf
+];
+
+// Category order for rendering UI
+export const categoryOrder = [
+  "Beverage",
+  "Canned and Dried",
+  "Grains and Beans",
+  "Houseware",
+  "Health and Beauty",
+  "Joss",
+  "Noodle",
+  "Sauce and Paste",
+  "Seasoning and Spice",
+  "Snack",
+  "Tea",
 ];
