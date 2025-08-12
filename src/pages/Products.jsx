@@ -1,3 +1,4 @@
+// src/pages/Products.jsx
 import { useState, useEffect, useMemo } from "react";
 import { productData, categoryOrder } from "../data/products";
 import MasonryProducts from "../components/MasonryProducts";
@@ -14,6 +15,9 @@ export default function Products() {
   const [category, setCategory] = useState(categoryFromURL);
   const [page, setPage] = useState(1);
 
+  // 🆕 抽屉开关上提到这里，方便别的组件触发
+  const [catOpen, setCatOpen] = useState(false);
+
   const allCategories = useMemo(() => ["__all__", ...categoryOrder], []);
 
   useEffect(() => {
@@ -23,30 +27,19 @@ export default function Products() {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 text-base lg:text-lg">
-      {/* 手机：水平 chips */}
-      {/* Mobile chips (full width & visible) */}
-      <div className="lg:hidden sticky top-16 z-20 bg-base-100/95 backdrop-blur supports-[backdrop-filter]:bg-base-100/80">
-        <div className="-mx-4 px-4 py-3 overflow-x-auto no-scrollbar snap-x snap-mandatory">
-          <div className="flex gap-2 w-max">
-            {allCategories.map((cat) => {
-              const active = category === cat;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setSearchParams({ category: cat })}
-                  className={`btn btn-sm whitespace-nowrap snap-start ${
-                    active ? "btn-neutral" : "btn-outline"
-                  }`}
-                >
-                  {cat === "__all__" ? t("all") : t(cat.toLowerCase())}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      {/* 📱 Mobile 顶部：仅显示当前分类（不再放按钮） */}
+      <MobileCategoryBar
+        category={category}
+        allCategories={allCategories}
+        setSearchParams={setSearchParams}
+        setPage={setPage}
+        t={t}
+        open={catOpen}
+        setOpen={setCatOpen}
+        hideTrigger // ← 隐藏顶部的“categories”按钮
+      />
 
-      {/* 桌面：侧栏 */}
+      {/* 💻 Desktop: 左侧侧栏 */}
       <aside className="hidden lg:block sticky top-24 max-h-[75vh] overflow-auto bg-base-100 rounded-box shadow-xl p-4 w-60">
         <ul className="menu menu-vertical gap-2 text-xl">
           {allCategories.map((cat) => (
@@ -57,7 +50,7 @@ export default function Products() {
             >
               <span
                 className={`relative inline-block transition-all duration-300
-                  ${category === cat ? "text-black" : "text-gray-400 "}
+                  ${category === cat ? "text-black" : "text-gray-400"}
                   group-hover:text-black
                   after:absolute after:bottom-0 after:left-0 after:h-[2px]
                   after:bg-black after:w-full after:transition-transform after:duration-300 
@@ -80,8 +73,88 @@ export default function Products() {
           setPage={setPage}
           highlightId={highlightId}
           setSearchParams={setSearchParams}
+          onOpenCategories={() => setCatOpen(true)}
         />
       </main>
     </div>
+  );
+}
+
+/* ============ Mobile Category Bar + Bottom Sheet ============ */
+function MobileCategoryBar({
+  category,
+  allCategories,
+  setSearchParams,
+  setPage,
+  t,
+  open,
+  setOpen,
+  hideTrigger = false, // true 时隐藏顶部触发按钮
+}) {
+  // 防止抽屉打开时背景滚动
+  useEffect(() => {
+    if (!open) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => (document.body.style.overflow = original);
+  }, [open]);
+
+  const label = (cat) => (cat === "__all__" ? t("all") : t(cat.toLowerCase()));
+
+  return (
+    <>
+      {/* 底部抽屉 */}
+      {open && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
+          />
+          <div
+            role="dialog"
+            aria-label={t("categories") || "Categories"}
+            className="absolute left-0 right-0 bottom-0 rounded-t-2xl bg-base-100 shadow-2xl p-4 pb-6 max-h-[75vh] overflow-y-auto"
+          >
+            <div className="mx-auto h-1.5 w-10 bg-gray-300 rounded-full mb-3" />
+            {/* 🆕 抽屉标题字号可调 */}
+            <h3 className="text-center font-semibold mb-3 text-base sm:text-lg">
+              {t("categories") || "Categories"}
+            </h3>
+
+            {/* 3列网格按钮：字号可调，英文保持小写 */}
+            <div className="grid grid-cols-3 gap-2">
+              {allCategories.map((cat) => {
+                const active = category === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => {
+                      setSearchParams({ category: cat });
+                      setPage(1);
+                      setOpen(false);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className={`btn whitespace-nowrap normal-case
+                      btn-sm sm:btn-md          /* ← 调整按钮高度 */
+                      text-[12px] sm:text-sm     /* ← 调整按钮文字大小 */
+                      ${active ? "btn-neutral" : "btn-outline"}`}
+                  >
+                    {label(cat)}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              className="btn btn-block btn-ghost mt-4 text-sm"
+              onClick={() => setOpen(false)}
+            >
+              {t("close") || "Close"}
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

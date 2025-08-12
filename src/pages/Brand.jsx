@@ -1,16 +1,36 @@
+// src/pages/Brand.jsx
 import { useTranslation } from "react-i18next";
+
 export default function Brand() {
   const { t } = useTranslation();
+
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-start px-4 pt-24">
-      <h1 className="text-4xl md:text-5xl font-semibold text-black mb-12 tracking-wide">
+    <main
+      aria-labelledby="brand-title"
+      className="max-w-7xl mx-auto px-4 sm:px-6 pt-[env(safe-area-inset-top)] py-10 sm:py-12 lg:py-16 bg-white"
+    >
+      <h1
+        id="brand-title"
+        className="text-center text-2xl sm:text-3xl md:text-5xl font-semibold tracking-wide mb-6 sm:mb-8"
+      >
         {t("ourBrand")}
       </h1>
-      <img
-        src="/assets/brand.jpg"
-        alt="Lotus Brand Logo"
-        className="max-w-xs md:max-w-md lg:max-w-lg shadow-md rounded-lg"
-      />
-    </div>
+
+      <figure className="flex justify-center">
+        <img
+          src="/assets/brand.jpg"
+          alt="Lotus Brand Logo"
+          loading="lazy"
+          decoding="async"
+          className="
+            w-11/12 max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl
+            rounded-lg shadow-md bg-gray-50
+            aspect-[4/3] object-contain
+          "
+          /* Responsive hint for the browser to pick the right size */
+          sizes="(min-width:1024px) 640px, (min-width:640px) 480px, 90vw"
+        />
+      </figure>
+    </main>
   );
 }

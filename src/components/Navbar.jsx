@@ -131,7 +131,7 @@ const Navbar = () => {
       {/* 左侧：Logo + Hamburger */}
       <div className="flex-1">
         <button
-          className="lg:hidden btn btn-ghost btn-square mr-2"
+          className="lg:hidden btn btn-ghost btn-square text-lg mr-2 "
           onClick={() => setOpen(true)}
           aria-label="Open menu"
         >
@@ -160,7 +160,7 @@ const Navbar = () => {
             <div className="flex items-center justify-between mb-4">
               <span className="font-semibold">{t("products")}</span>
               <button
-                className="btn btn-ghost btn-sm"
+                className="btn btn-ghost btn-sm text-lg"
                 onClick={() => setOpen(false)}
               >
                 ✕
