@@ -5,10 +5,12 @@ import Home from "./pages/Home";
 import Products from "./pages/Products";
 import Contact from "./pages/Contact";
 import Brand from "./pages/Brand";
+import ScrollManager from "./components/ScrollManager";
 
 function App() {
   return (
     <Router>
+      <ScrollManager />
       <div className="flex flex-col min-h-screen font-sans  dark:bg-gray-900">
         <Navbar />
         <main className="flex-grow container mx-auto px-4 py-6">

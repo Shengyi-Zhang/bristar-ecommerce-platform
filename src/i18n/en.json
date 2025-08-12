@@ -30,5 +30,8 @@
   "email": "Email",
   "brand": "Brands",
   "googleMap": "Open in Google Maps",
-  "clickToInteract": "Click to Interact"
+  "clickToInteract": "Click to Interact",
+  "categories": "Categories",
+  "close": "Close",
+  "searchProduct": "Search Products"
 }

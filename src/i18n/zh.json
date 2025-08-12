@@ -30,5 +30,8 @@
   "email": "電子郵箱",
   "brand": "品牌",
   "googleMap": "在谷歌地圖中打開",
-  "clickToInteract": "請點擊這裏交互地圖"
+  "clickToInteract": "請點擊這裏交互地圖",
+  "categories": "產品種類",
+  "close": "關閉",
+  "searchProduct": "產品名稱"
 }

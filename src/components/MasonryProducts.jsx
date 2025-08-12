@@ -126,8 +126,8 @@ export default function MasonryProducts({
       >
         <Input
           type="text"
-          placeholder="🔍 Search products..."
-          className="input input-bordered input-sm min-w-0 w-full md:input-md md:max-w-sm lg:input-sm"
+          placeholder={`🔍 ${t("searchProduct")}...`}
+          className="input input-bordered input-sm  text-base placeholder:text-base leading-tight min-w-0 w-full md:input-md md:max-w-sm lg:input-sm"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value.trimStart());
@@ -136,7 +136,7 @@ export default function MasonryProducts({
         />
         <select
           aria-label="Sort"
-          className="select select-bordered select-sm w-full md:select-md lg:select-sm"
+          className="select select-bordered select-sm text-base leading-tight w-full md:select-md lg:select-sm"
           value={sortOrder}
           onChange={(e) => {
             setSortOrder(e.target.value);
