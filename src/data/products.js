@@ -1,51 +1,5 @@
 // src/data/products.js
 export const productData = [
-  // === New ===
-  {
-    id: "black-rice-congee",
-    code: "DRTW001.3",
-    name: "CC BLACK RICE CONGEE",
-    desc: "24can/320ml",
-    cdesc: "親親紫米八寶粥",
-    image: "/assets/beverage/black-rice-congee.jpeg",
-    category: "New Item",
-  },
-  {
-    id: "matcha-bubble-tea",
-    code: "DRTW007.2",
-    name: "CC MATCHA BUBBLE TEA",
-    desc: "24can/315ml",
-    cdesc: "親親綠茶珍珠奶茶",
-    image: "/assets/beverage/matcha-bubble-tea.png",
-    category: "New Item",
-  },
-  {
-    id: "mung-bean",
-    code: "DRTW003",
-    name: "CC MUNG BEAN",
-    desc: "24can/320ml",
-    cdesc: "親親薏仁綠豆",
-    image: "/assets/beverage/mung-bean.png",
-    category: "New Item",
-  },
-  {
-    id: "brown-sugar-bubble-tea",
-    code: "DRTW007",
-    name: "CC BROWN SUGAR BUBBLE TEA",
-    desc: "24can/315ml",
-    cdesc: "親親黑糖珍珠奶茶",
-    image: "/assets/beverage/brown-sugar-bubble-tea.png",
-    category: "New Item",
-  },
-  {
-    id: "lotus-pickled-red-ginger",
-    code: "AGTH101",
-    name: "LOTUS PICKLED RED GINGER",
-    desc: "24jar/454g",
-    cdesc: "蓮花醋紅薑片",
-    image: "/assets/canned/lotus-pickled-red-ginger.png",
-    category: "New Item",
-  },
   // === Beverage ===
   {
     id: "rock-mountain",
@@ -91,6 +45,7 @@ export const productData = [
     cdesc: "親親紫米八寶粥",
     image: "/assets/beverage/black-rice-congee.jpeg",
     category: "Beverage",
+    isNew: true, // ✅ 新品
   },
   {
     id: "grass-jelly",
@@ -101,8 +56,6 @@ export const productData = [
     image: "/assets/beverage/grass-jelly.jpeg",
     category: "Beverage",
   },
-
-  // From: 67a6759d-e951-4802-8c07-15e24bc84c8f.pdf
   {
     id: "mung-bean",
     code: "DRTW003",
@@ -111,8 +64,8 @@ export const productData = [
     cdesc: "親親薏仁綠豆",
     image: "/assets/beverage/mung-bean.png",
     category: "Beverage",
+    isNew: true, // ✅ 新品
   },
-  // From: 67a6759d-e951-4802-8c07-15e24bc84c8f.pdf
   {
     id: "matcha-bubble-tea",
     code: "DRTW007.2",
@@ -121,8 +74,8 @@ export const productData = [
     cdesc: "親親綠茶珍珠奶茶",
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Beverage",
+    isNew: true, // ✅ 新品
   },
-  // From: 67a6759d-e951-4802-8c07-15e24bc84c8f.pdf
   {
     id: "brown-sugar-bubble-tea",
     code: "DRTW007",
@@ -131,6 +84,7 @@ export const productData = [
     cdesc: "親親黑糖珍珠奶茶",
     image: "/assets/beverage/brown-sugar-bubble-tea.png",
     category: "Beverage",
+    isNew: true, // ✅ 新品
   },
   {
     id: "mix-fruit-juice",
@@ -141,6 +95,7 @@ export const productData = [
     image: "/assets/beverage/mix-fruit-juice.png",
     category: "Beverage",
   },
+
   // === Canned and Dried ===
   {
     id: "dried-mushroom",
@@ -169,7 +124,6 @@ export const productData = [
     image: "/assets/canned/sumacco-sm-sardine-in-tomato-sauce.png",
     category: "Canned and Dried",
   },
-
   {
     id: "lotus-pickled-red-ginger",
     code: "AGTH101",
@@ -178,9 +132,8 @@ export const productData = [
     cdesc: "蓮花醋紅薑片",
     image: "/assets/canned/lotus-pickled-red-ginger.png",
     category: "Canned and Dried",
+    isNew: true, // ✅ 新品
   },
-  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
-
   {
     id: "lotus-tamarind-leave-sm",
     code: "AGTH102.2",
@@ -190,8 +143,6 @@ export const productData = [
     image: "/assets/canned/lotus-tamarind-leave-sm.png",
     category: "Canned and Dried",
   },
-  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
-
   {
     id: "lotus-pickled-red-chili",
     code: "AGTH110",
@@ -201,8 +152,6 @@ export const productData = [
     image: "/assets/canned/lotus-pickled-red-chili.png",
     category: "Canned and Dried",
   },
-  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
-
   {
     id: "pickled-mustard",
     code: "AGCN014",
@@ -212,8 +161,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Canned and Dried",
   },
-  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
-
   {
     id: "fried-gluten",
     code: "AGCN015",
@@ -223,8 +170,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Canned and Dried",
   },
-  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
-
   {
     id: "fermented-tofu",
     code: "AGCN016",
@@ -234,8 +179,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Canned and Dried",
   },
-  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
-
   {
     id: "soybean-sheets",
     code: "AGCN017",
@@ -245,7 +188,7 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Canned and Dried",
   },
-  // From: b18cb6e3-6652-4149-b072-ed00abe4d8e4.pdf
+
   // === Grains and Beans ===
   {
     id: "chickpeas",
@@ -257,7 +200,7 @@ export const productData = [
     category: "Grains and Beans",
   },
   {
-    id: "mung-bean",
+    id: "split-mung-beans", // ⬅️ 避免与饮料 mung-bean 冲突
     code: "NTCN005",
     name: "SPLIT MUNG BEANS",
     desc: "25kg",
@@ -274,7 +217,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Grains and Beans",
   },
-
   {
     id: "red-kidney-bean",
     code: "NTCN101",
@@ -284,8 +226,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Grains and Beans",
   },
-  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
-
   {
     id: "green-beans",
     code: "NTCN102",
@@ -295,8 +235,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Grains and Beans",
   },
-  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
-
   {
     id: "lotus-seed",
     code: "NTCN103",
@@ -306,8 +244,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Grains and Beans",
   },
-  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
-
   {
     id: "red-beans",
     code: "NTCN104",
@@ -317,8 +253,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Grains and Beans",
   },
-  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
-
   {
     id: "raw-peanut-with-skin",
     code: "NTCN003.2",
@@ -328,8 +262,6 @@ export const productData = [
     image: "/assets/beverage/raw-peanut-with-skin.png",
     category: "Grains and Beans",
   },
-  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
-
   {
     id: "barley",
     code: "NTCN106",
@@ -339,8 +271,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Grains and Beans",
   },
-  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
-
   {
     id: "glutinous-rice",
     code: "NTCN107",
@@ -350,9 +280,8 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Grains and Beans",
   },
-  // From: 4c316c73-11e0-44da-80f8-5a853a13243e.pdf
-  // === Houseware ===
 
+  // === Houseware ===
   {
     id: "eco-napkin",
     code: "TKCN058",
@@ -391,6 +320,7 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Joss",
   },
+
   // === Noodle ===
   {
     id: "bean-vermicelli",
@@ -401,8 +331,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Noodle",
   },
-  // From: 2396c99f-dde1-4d99-bdd4-5c31dd384553.pdf
-
   {
     id: "ramen",
     code: "NDCN003",
@@ -412,7 +340,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Noodle",
   },
-  // From: 2396c99f-dde1-4d99-bdd4-5c31dd384553.pdf
 
   // === Sauce and Paste ===
   {
@@ -424,7 +351,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Sauce and Paste",
   },
-  // From: 2396c99f-dde1-4d99-bdd4-5c31dd384553.pdf
 
   // === Seasoning and Spice ===
   {
@@ -436,7 +362,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Seasoning and Spice",
   },
-  // From: 2396c99f-dde1-4d99-bdd4-5c31dd384553.pdf
 
   // === Snack ===
   {
@@ -448,7 +373,6 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Snack",
   },
-  // From: 2396c99f-dde1-4d99-bdd4-5c31dd384553.pdf
 
   // === Tea ===
   {
@@ -460,17 +384,15 @@ export const productData = [
     image: "/assets/beverage/matcha-bubble-tea.png",
     category: "Tea",
   },
-  // From: 2396c99f-dde1-4d99-bdd4-5c31dd384553.pdf
 ];
 
 // Category order for rendering UI
 export const categoryOrder = [
-  "New Item",
+  "New Item", // 仍保留为“虚拟分类”，UI 通过 isNew 过滤
   "Beverage",
   "Canned and Dried",
   "Grains and Beans",
   "Houseware",
-
   "Joss",
   "Noodle",
   "Sauce and Paste",

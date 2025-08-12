@@ -1,7 +1,6 @@
-import Masonry from "react-masonry-css";
-import { useState, useMemo, useEffect } from "react";
-import { Join, Button } from "react-daisyui";
-import { useTranslation } from "react-i18next";
+// src/components/MasonryProducts.jsx
+import { useMemo, useState, useEffect } from "react";
+import { Join, Button, Input } from "react-daisyui";
 
 export default function MasonryProducts({
   products,
@@ -11,26 +10,42 @@ export default function MasonryProducts({
   highlightId,
   setSearchParams,
 }) {
+  const perPage = 6;
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
-  const perPage = 6;
-  const { t } = useTranslation();
-  const filteredSorted = useMemo(() => {
-    const normalizedSearch = searchTerm
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase();
-    let filtered =
-      category === t("all")
-        ? products
-        : products.filter((p) => p.category === category);
 
-    if (normalizedSearch) {
-      filtered = products.filter((p) =>
-        [p.name, p.desc, p.cdesc, p.code].some((field) =>
-          field.toLowerCase().includes(normalizedSearch)
-        )
-      );
+  const filteredSorted = useMemo(() => {
+    const normalize = (str) =>
+      (str || "")
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/[^\p{L}\p{N}]/gu, "");
+    const q = normalize(searchTerm);
+    let filtered = [];
+
+    if (q) {
+      const map = new Map();
+      for (const p of products) {
+        if (normalize(p.name).includes(q) || normalize(p.cdesc).includes(q)) {
+          if (!map.has(p.id)) map.set(p.id, p);
+        }
+      }
+      filtered = Array.from(map.values());
+    } else {
+      if (category === "__all__") {
+        const seen = new Set();
+        filtered = products.filter((p) => !seen.has(p.id) && seen.add(p.id));
+      } else if (category?.toLowerCase().trim() === "new item") {
+        const seen = new Set();
+        filtered = products.filter(
+          (p) => p.isNew && !seen.has(p.id) && seen.add(p.id)
+        );
+      } else {
+        filtered = products.filter(
+          (p) =>
+            p.category?.toLowerCase().trim() === category?.toLowerCase().trim()
+        );
+      }
     }
 
     filtered.sort((a, b) =>
@@ -39,109 +54,130 @@ export default function MasonryProducts({
         : b.name.localeCompare(a.name)
     );
 
-    if (highlightId) {
+    if (!q && highlightId) {
       const idx = filtered.findIndex((p) => p.id === highlightId);
       if (idx > 0) {
-        const [h] = filtered.splice(idx, 1);
-        filtered.unshift(h);
+        const [hit] = filtered.splice(idx, 1);
+        filtered.unshift(hit);
       }
     }
+
     return filtered;
-  }, [products, category, sortOrder, searchTerm, highlightId]);
+  }, [products, category, searchTerm, sortOrder, highlightId]);
+
+  const totalPages = Math.ceil(filteredSorted.length / perPage);
+  const slice = filteredSorted.slice((page - 1) * perPage, page * perPage);
 
   useEffect(() => {
-    setPage(1);
-  }, [searchTerm, category]);
+    if (highlightId) setPage(1);
+  }, [highlightId, setPage]);
 
-  const slice = filteredSorted.slice((page - 1) * perPage, page * perPage);
-  const cols = { default: 3, 1024: 2, 640: 1 };
+  useEffect(() => {
+    setSearchTerm("");
+    setPage(1);
+  }, [category, setPage]);
 
   return (
     <>
       {/* Search + Sort */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
-        <h2 className="text-2xl font-bold">
-          {searchTerm.trim()
-            ? `${t("searchResultFor")} "${searchTerm.trim()}", ${
-                filteredSorted.length
-              } ${t("itemFound")}`
-            : category}
-        </h2>
-        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setSearchParams({ category: t("all") });
-            }}
-            className="input input-bordered input-sm w-full sm:w-64"
-          />
-          <select
-            className="select select-bordered select-sm"
-            value={sortOrder}
-            onChange={(e) => {
-              setSortOrder(e.target.value);
-              setPage(1);
-            }}
-          >
-            <option value="asc">A–Z</option>
-            <option value="desc">Z–A</option>
-          </select>
-        </div>
+      {/* Search + Sort in one row */}
+      {/* Search + Sort (responsive sizes) */}
+      <div className="flex items-center gap-2 mb-4 md:mb-6 md:justify-end">
+        <Input
+          type="text"
+          placeholder="🔍 Search products..."
+          className="
+      input input-bordered
+      input-sm                      
+      flex-1                        
+      md:flex-none md:input-md      
+      md:max-w-sm lg:input-sm      
+    "
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value.trimStart());
+            setPage(1);
+          }}
+        />
+
+        <select
+          aria-label="Sort"
+          className="
+      select select-bordered
+      select-sm                    
+      md:select-md lg:select-sm     
+      shrink-0 w-[5.5rem] sm:w-[6rem]
+    "
+          value={sortOrder}
+          onChange={(e) => {
+            setSortOrder(e.target.value);
+            setPage(1);
+          }}
+        >
+          <option value="asc">A–Z</option>
+          <option value="desc">Z–A</option>
+        </select>
       </div>
 
-      {/* Masonry */}
-      <Masonry
-        breakpointCols={cols}
-        className="flex gap-6 mt-6"
-        columnClassName="flex flex-col gap-8"
-      >
+      {/* Grid: base 2 cols → md:2 → lg:3 */}
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
         {slice.map((p) => (
-          <div
+          <button
             key={p.id}
-            className={`card cursor-pointer transition shadow-lg hover:shadow-xl h-[350px] w-full max-w-sm mx-auto ${
-              p.id === highlightId ? "ring-2 ring-black" : ""
-            }`}
             onClick={() => {
+              setSearchParams({ category: p.category, highlight: p.id });
               setSearchTerm("");
               setPage(1);
-              setSearchParams({ category: p.category, highlight: p.id });
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
+            className={`card h-full flex flex-col text-left shadow hover:shadow-lg transition ${
+              p.id === highlightId ? "border-2 border-black" : ""
+            }`}
           >
-            <figure>
+            <figure className="bg-gray-50">
               <img
                 src={p.image}
                 alt={p.name}
-                className="h-full w-full object-contain"
+                className="w-full h-40 sm:h-48 md:h-56 object-contain"
+                loading="lazy"
               />
             </figure>
-            <div className="card-body">
-              <h3 className="card-title">{p.name}</h3>
-              <p className="text-sm text-gray-600">{p.desc}</p>
-              <p className="text-xs italic text-gray-400">{p.cdesc}</p>
-              <p className="text-xs text-gray-400">{p.code}</p>
-              <p className="text-xs text-black font-semibold">{p.category}</p>
-            </div>
-          </div>
-        ))}
-      </Masonry>
 
-      {/* No Results */}
-      {filteredSorted.length === 0 && (
-        <p className="text-center mt-10 text-gray-500">No products found.</p>
-      )}
+            {/* Normalize text heights so rows look clean */}
+            <div className="card-body p-3 sm:p-4 flex flex-col grow !gap-1 sm:!gap-1.5">
+              {/* Title */}
+              <h3 className="card-title leading-snug text-sm sm:text-base md:text-2xl line-clamp-2 min-h-[2.4rem] sm:min-h-[2.8rem] md:min-h-[3.2rem]">
+                {p.name}
+              </h3>
+
+              {/* cdesc (Chinese) */}
+              <p className="text-sm sm:text-base md:text-xl leading-tight line-clamp-1 min-h-[1.05rem] sm:min-h-[1.2rem]">
+                {p.cdesc}
+              </p>
+
+              {/* desc (size/pack) */}
+              <p className="text-[11px] sm:text-sm text-gray-600 leading-tight line-clamp-1 min-h-[1.05rem] sm:min-h-[1.2rem]">
+                {p.desc}
+              </p>
+
+              {/* code pinned at bottom */}
+              <p className="text-[10px] text-gray-400 mt-auto">{p.code}</p>
+            </div>
+          </button>
+        ))}
+      </div>
 
       {/* Pagination */}
-      {filteredSorted.length > perPage && (
-        <Join className="join justify-center mt-8">
-          <Button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
+      {totalPages > 1 && (
+        <Join className="join justify-center mt-6">
+          <Button
+            className="join-item"
+            disabled={page === 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
             «
           </Button>
-          {Array.from({
-            length: Math.ceil(filteredSorted.length / perPage),
-          }).map((_, i) => (
+          {Array.from({ length: totalPages }, (_, i) => (
             <Button
               key={i}
               className={`join-item ${page === i + 1 ? "btn-active" : ""}`}
@@ -151,7 +187,8 @@ export default function MasonryProducts({
             </Button>
           ))}
           <Button
-            disabled={page === Math.ceil(filteredSorted.length / perPage)}
+            className="join-item"
+            disabled={page === totalPages}
             onClick={() => setPage((p) => p + 1)}
           >
             »

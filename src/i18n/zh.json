@@ -24,9 +24,11 @@
   "homeContact": "聯絡我們",
   "searchResultFor": "正在搜尋: ",
   "itemFound": "個物品已找到",
-  "adress": "地址",
+  "address": "地址",
   "phone": "電話",
   "fax": "傳真",
   "email": "電子郵箱",
-  "brand": "品牌"
+  "brand": "品牌",
+  "googleMap": "在谷歌地圖中打開",
+  "clickToInteract": "請點擊這裏交互地圖"
 }

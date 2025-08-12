@@ -13,3 +13,8 @@
   overflow-x: auto;
   white-space: nowrap; /* or flex layout with wider content */
 }
+
+html,
+body {
+  overscroll-behavior-y: none;
+}

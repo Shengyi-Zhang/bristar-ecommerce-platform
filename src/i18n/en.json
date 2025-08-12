@@ -24,9 +24,11 @@
   "homeContact": "Contact Us",
   "searchResultFor": "Search results for: ",
   "itemFound": "item found",
-  "adress": "Adress",
+  "address": "Address",
   "phone": "Phone",
   "fax": "Fax",
   "email": "Email",
-  "brand": "Brands"
+  "brand": "Brands",
+  "googleMap": "Open in Google Maps",
+  "clickToInteract": "Click to Interact"
 }

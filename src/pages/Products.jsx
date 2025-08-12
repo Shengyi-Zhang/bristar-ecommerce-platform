@@ -8,15 +8,13 @@ export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation();
 
-  const categoryFromURL = searchParams.get("category") || "beverage";
+  const categoryFromURL = searchParams.get("category") || "New Item";
   const highlightId = searchParams.get("highlight");
-
-  const allCategories = useMemo(() => {
-    return [t("all"), ...categoryOrder];
-  }, []);
 
   const [category, setCategory] = useState(categoryFromURL);
   const [page, setPage] = useState(1);
+
+  const allCategories = useMemo(() => ["__all__", ...categoryOrder], []);
 
   useEffect(() => {
     setCategory(categoryFromURL);
@@ -24,15 +22,37 @@ export default function Products() {
   }, [categoryFromURL]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6">
-      <aside className="sticky top-4 max-h-[65vh] overflow-auto bg-base-100 rounded-box shadow-xl p-4 w-60">
-        <ul className="menu menu-vertical gap-2">
+    <div className="flex flex-col lg:flex-row gap-6 text-base lg:text-lg">
+      {/* 手机：水平 chips */}
+      {/* Mobile chips (full width & visible) */}
+      <div className="lg:hidden sticky top-16 z-20 bg-base-100/95 backdrop-blur supports-[backdrop-filter]:bg-base-100/80">
+        <div className="-mx-4 px-4 py-3 overflow-x-auto no-scrollbar snap-x snap-mandatory">
+          <div className="flex gap-2 w-max">
+            {allCategories.map((cat) => {
+              const active = category === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setSearchParams({ category: cat })}
+                  className={`btn btn-sm whitespace-nowrap snap-start ${
+                    active ? "btn-neutral" : "btn-outline"
+                  }`}
+                >
+                  {cat === "__all__" ? t("all") : t(cat.toLowerCase())}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* 桌面：侧栏 */}
+      <aside className="hidden lg:block sticky top-24 max-h-[75vh] overflow-auto bg-base-100 rounded-box shadow-xl p-4 w-60">
+        <ul className="menu menu-vertical gap-2 text-xl">
           {allCategories.map((cat) => (
             <button
               key={cat}
-              onClick={() => {
-                setSearchParams({ category: cat });
-              }}
+              onClick={() => setSearchParams({ category: cat })}
               className="w-full text-left px-4 py-2 group"
             >
               <span
@@ -45,7 +65,7 @@ export default function Products() {
                   ${category === cat ? "after:scale-x-100" : "after:scale-x-0"}
                   group-hover:after:scale-x-100`}
               >
-                {t(cat.toLowerCase())}
+                {cat === "__all__" ? t("all") : t(cat.toLowerCase())}
               </span>
             </button>
           ))}

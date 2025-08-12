@@ -7,22 +7,24 @@ export default function Home() {
   return (
     <div className="space-y-20">
       {/* Hero Section */}
-      <section className="flex flex-col items-center text-center py-24 bg-white">
-        <h1 className="text-5xl md:text-6xl font-light tracking-wide">
+      <section className="flex flex-col items-center text-center py-24 bg-white ">
+        <h1 className="text-5xl md:text-6xl font-light tracking-wide text-black">
           BRISTAR INTL TRADING LTD.
         </h1>
 
-        <p className="text-2xl text-gray-600 mt-4">永 輝 國 際 貿 易</p>
+        <p className="text-2xl text-gray-600 mt-4 text-black">
+          永 輝 國 際 貿 易
+        </p>
         <hr className="border-t-4 border-red-600 w-36 mx-auto my-6 " />
-        <p className="max-w-xl mx-auto text-gray-500 text-sm">
+        <p className="max-w-xl mx-auto text-gray-500 text-sm text-black">
           Asian Food Importer & Distributor in Vancouver
         </p>
       </section>
 
       {/* About Section */}
-      <section className="max-w-4xl mx-auto px-6 text-center">
+      <section className="max-w-4xl mx-auto px-6 text-center text-black">
         <h2 className="text-2xl font-semibold mb-4">{t("ourCompany")}</h2>
-        <p className="text-gray-600 leading-relaxed text-lg">
+        <p className="text-gray-600 leading-relaxed text-lg text-black">
           {t("ourCompanyInfo")}
         </p>
       </section>
