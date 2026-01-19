@@ -19,10 +19,10 @@ const Navbar = () => {
           <ul className="p-2 bg-base-100 z-[1]  w-56">
             <li>
               <Link
-                to="/products?category=New Item"
+                to="/products?category=__new__"
                 onClick={() => setOpen(false)}
               >
-                {t("new item")}
+                {t("newItems")}
               </Link>
             </li>
             <li>

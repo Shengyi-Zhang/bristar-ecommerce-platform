@@ -1,14 +1,18 @@
-# deps & build
-node_modules
-dist
-dist-ssr
+
+
+# deps/build
+node_modules/
+dist/
+build/
 
 # vite cache
 .vite
 
 # env
 .env
-.env.*
+.env.local
+.env.*.local
+
 
 # OS/editor
 .DS_Store

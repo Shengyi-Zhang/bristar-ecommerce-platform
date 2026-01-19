@@ -14,23 +14,31 @@ export default function MasonryProducts({
 }) {
   const { t } = useTranslation();
   const perPage = 6;
+
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
 
-  /* ---------- filtering (unchanged) ---------- */
+  /* ---------- filtering ---------- */
   const filteredSorted = useMemo(() => {
     const normalize = (str) =>
       (str || "")
         .toLowerCase()
         .replace(/\s+/g, "")
         .replace(/[^\p{L}\p{N}]/gu, "");
+
     const q = normalize(searchTerm);
+
+    const normalizedCat = String(category || "").toLowerCase().trim();
+    const isVirtualNew = category === "__new__";
+
+
     let filtered = [];
 
     if (q) {
+      // 搜索：基于 name + desc（后端已按语言合并）
       const map = new Map();
       for (const p of products) {
-        if (normalize(p.name).includes(q) || normalize(p.cdesc).includes(q)) {
+        if (normalize(p.name).includes(q) || normalize(p.desc).includes(q)) {
           if (!map.has(p.id)) map.set(p.id, p);
         }
       }
@@ -39,25 +47,28 @@ export default function MasonryProducts({
       if (category === "__all__") {
         const seen = new Set();
         filtered = products.filter((p) => !seen.has(p.id) && seen.add(p.id));
-      } else if (category?.toLowerCase().trim() === "new item") {
+      } else if (isVirtualNew) {
         const seen = new Set();
         filtered = products.filter(
-          (p) => p.isNew && !seen.has(p.id) && seen.add(p.id)
+          (p) => p.isNewItem && !seen.has(p.id) && seen.add(p.id)
         );
       } else {
         filtered = products.filter(
           (p) =>
-            p.category?.toLowerCase().trim() === category?.toLowerCase().trim()
+            p.category?.toLowerCase().trim() ===
+            String(category || "").toLowerCase().trim()
         );
       }
     }
 
+    // 排序
     filtered.sort((a, b) =>
       sortOrder === "asc"
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name)
+        ? (a.name || "").localeCompare(b.name || "")
+        : (b.name || "").localeCompare(a.name || "")
     );
 
+    // 高亮项提前
     if (!q && highlightId) {
       const idx = filtered.findIndex((p) => p.id === highlightId);
       if (idx > 0) {
@@ -81,8 +92,8 @@ export default function MasonryProducts({
     setPage(1);
   }, [category, setPage]);
 
-  /* ---------- helpers: responsive compact pagination ---------- */
-  const [maxItems, setMaxItems] = useState(5); // how many items incl. numbers + ellipses (mobile)
+  /* ---------- responsive pagination ---------- */
+  const [maxItems, setMaxItems] = useState(5);
   useEffect(() => {
     const mqMd = window.matchMedia("(min-width:768px)");
     const mqLg = window.matchMedia("(min-width:1024px)");
@@ -97,17 +108,14 @@ export default function MasonryProducts({
   }, []);
 
   const pageItems = useMemo(() => {
-    // returns array like: [1, '…', 6, 7, 8, '…', 20]
-    const max = Math.max(5, maxItems);
-    if (totalPages <= max)
+    if (totalPages <= maxItems)
       return Array.from({ length: totalPages }, (_, i) => i + 1);
 
-    const side = 1; // always show first & last
-    const windowSize = max - side * 2 - 2; // numbers around current, minus two ellipses
+    const windowSize = maxItems - 4; // 1 + … + window + … + last
     let start = Math.max(2, page - Math.floor(windowSize / 2));
     let end = Math.min(totalPages - 1, start + windowSize - 1);
-    // shift left if we hit the right edge
-    start = Math.max(2, Math.min(start, totalPages - 1 - windowSize + 1));
+    start = Math.max(2, Math.min(start, totalPages - windowSize));
+
     const items = [1];
     if (start > 2) items.push("…");
     for (let i = start; i <= end; i++) items.push(i);
@@ -116,18 +124,21 @@ export default function MasonryProducts({
     return items;
   }, [page, totalPages, maxItems]);
 
+  const normalizedCat = String(category || "").toLowerCase().trim();
+  const isVirtualNew = normalizedCat.includes("new item");
+
   return (
     <>
-      {/* Search + Sort + (Mobile) Categories Trigger */}
+      {/* Search + Sort + Mobile Categories */}
       <div
         className="grid items-center gap-2 mt-1 mb-3 md:mb-6
-                      grid-cols-[minmax(9rem,3fr)_minmax(4.8rem,1fr)_minmax(6.4rem,2fr)]
-                      md:grid-cols-[minmax(16rem,1fr)_auto]"
+        grid-cols-[minmax(9rem,3fr)_minmax(4.8rem,1fr)_minmax(6.4rem,2fr)]
+        md:grid-cols-[minmax(16rem,1fr)_auto]"
       >
         <Input
           type="text"
           placeholder={`🔍 ${t("searchProduct")}...`}
-          className="input input-bordered input-sm  text-base placeholder:text-base leading-tight min-w-0 w-full md:input-md md:max-w-sm lg:input-sm"
+          className="input input-bordered input-sm text-base"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value.trimStart());
@@ -135,8 +146,7 @@ export default function MasonryProducts({
           }}
         />
         <select
-          aria-label="Sort"
-          className="select select-bordered select-sm text-base leading-tight w-full md:select-md lg:select-sm"
+          className="select select-bordered select-sm text-base"
           value={sortOrder}
           onChange={(e) => {
             setSortOrder(e.target.value);
@@ -147,120 +157,93 @@ export default function MasonryProducts({
           <option value="desc">Z–A</option>
         </select>
         <button
-          type="button"
-          className="btn btn-outline btn-sm w-full truncate md:hidden"
+          className="btn btn-outline btn-sm md:hidden"
           onClick={onOpenCategories}
-          aria-haspopup="dialog"
-          title={t("categories") || "Categories"}
         >
-          {t("categories") || "Categories"}
+          {t("categories")}
         </button>
       </div>
 
-      {/* Grid + Pagination: put pagination INSIDE the grid and span all columns */}
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+      {/* Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         {slice.map((p) => (
           <button
-            key={p.id}
+            key={p.slug || p.id}
             onClick={() => {
-              setSearchParams({ category: p.category, highlight: p.id });
+              // ✅ 如果当前在 New Items 页面，保持 category 不变，只更新 highlight
+              const catForUrl = isVirtualNew ? category : p.category;
+              setSearchParams({ category: catForUrl, highlight: p.id });
+
               setSearchTerm("");
               setPage(1);
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className={`card h-full flex flex-col text-left shadow hover:shadow-lg transition ${
+            className={`card h-full shadow hover:shadow-lg transition ${
               p.id === highlightId ? "border-2 border-black" : ""
             }`}
           >
             <figure className="bg-gray-50">
               <img
-                src={p.image}
+                src={p.imageUrl}
                 alt={p.name}
-                className="w-full h-40 sm:h-48 md:h-56 object-contain"
+                className="w-full h-40 md:h-56 object-contain"
                 loading="lazy"
               />
             </figure>
-            <div className="card-body p-3 sm:p-4 flex flex-col grow !gap-1 sm:!gap-1.5">
-              <h3 className="card-title leading-snug text-sm sm:text-base md:text-2xl line-clamp-2 min-h-[2.4rem] sm:min-h-[2.8rem] md:min-h-[3.2rem]">
+            <div className="card-body p-3">
+              <h3 className="card-title text-sm md:text-xl line-clamp-2">
                 {p.name}
               </h3>
-              <p className="text-sm sm:text-base md:text-xl leading-tight line-clamp-1 min-h-[1.05rem] sm:min-h-[1.2rem]">
-                {p.cdesc}
-              </p>
-              <p className="text-[11px] sm:text-sm text-gray-600 leading-tight line-clamp-1 min-h-[1.05rem] sm:min-h-[1.2rem]">
-                {p.desc}
-              </p>
-              <p className="text-[10px] text-gray-400 mt-auto">{p.code}</p>
+              <p className="text-sm text-gray-600 line-clamp-2">{p.desc}</p>
+              <p className="text-[11px] text-gray-400 mt-auto">{p.code}</p>
             </div>
           </button>
         ))}
 
-        {/* Pagination aligned with grid */}
+        {/* Pagination */}
         {totalPages > 1 && (
-          <div className="col-span-2 md:col-span-2 lg:col-span-3">
-            <div className="w-full overflow-x-auto no-scrollbar">
-              <div className="flex justify-center">
-                <Join className="join">
-                  <Button
-                    className="join-item text-2xl md:text-3xl leading-none"
-                    disabled={page === 1}
-                    onClick={() => setPage(1)}
-                    aria-label="First"
-                  >
-                    «
-                  </Button>
-                  <Button
-                    className="join-item text-2xl md:text-3xl leading-none"
-                    disabled={page === 1}
-                    onClick={() => setPage((p) => p - 1)}
-                    aria-label="Prev"
-                  >
-                    ‹
-                  </Button>
+          <div className="col-span-2 lg:col-span-3 flex justify-center">
+            <Join>
+              <Button disabled={page === 1} onClick={() => setPage(1)}>
+                «
+              </Button>
+              <Button disabled={page === 1} onClick={() => setPage(page - 1)}>
+                ‹
+              </Button>
 
-                  {pageItems.map((it, idx) =>
-                    it === "…" ? (
-                      <Button
-                        key={`dots-${idx}`}
-                        className="join-item btn-ghost btn-disabled px-2"
-                      >
-                        …
-                      </Button>
-                    ) : (
-                      <Button
-                        key={it}
-                        className={`join-item ${
-                          page === it ? "btn-active" : ""
-                        }`}
-                        onClick={() => setPage(it)}
-                      >
-                        {it}
-                      </Button>
-                    )
-                  )}
+              {pageItems.map((it, i) =>
+                it === "…" ? (
+                  <Button key={`dots-${i}`} disabled>
+                    …
+                  </Button>
+                ) : (
+                  <Button
+                    key={`page-${it}`}
+                    className={page === it ? "btn-active" : ""}
+                    onClick={() => setPage(it)}
+                  >
+                    {it}
+                  </Button>
+                )
+              )}
 
-                  <Button
-                    className="join-item text-2xl md:text-3xl leading-none"
-                    disabled={page === totalPages}
-                    onClick={() => setPage((p) => p + 1)}
-                    aria-label="Next"
-                  >
-                    ›
-                  </Button>
-                  <Button
-                    className="join-item text-2xl md:text-3xl leading-none"
-                    disabled={page === totalPages}
-                    onClick={() => setPage(totalPages)}
-                    aria-label="Last"
-                  >
-                    »
-                  </Button>
-                </Join>
-              </div>
-            </div>
+              <Button
+                disabled={page === totalPages}
+                onClick={() => setPage(page + 1)}
+              >
+                ›
+              </Button>
+              <Button
+                disabled={page === totalPages}
+                onClick={() => setPage(totalPages)}
+              >
+                »
+              </Button>
+            </Join>
           </div>
         )}
       </div>
     </>
   );
 }
+

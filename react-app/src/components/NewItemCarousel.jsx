@@ -1,8 +1,8 @@
 // src/components/NewItemCarousel.jsx
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { productData } from "../data/products";
 import { Link } from "react-router-dom";
+import { fetchProducts } from "../services/productsApi";
 
 const isIOS =
   typeof navigator !== "undefined" &&
@@ -13,32 +13,40 @@ export default function NewItemsCarousel() {
   const scrollRef = useRef(null);
   const rafRef = useRef(0);
   const accRef = useRef(0);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  // 自动滚动控制
+  const [baseNewItems, setBaseNewItems] = useState([]);
   const [paused, setPaused] = useState(false);
   const [snap, setSnap] = useState(false);
-  const [speed, setSpeed] = useState(0.3); // 初始兜底
+  const [speed, setSpeed] = useState(0.3);
 
-  // ① 数据：兼容 isNew 与老的 "New Item"
-  const baseNewItems = useMemo(() => {
-    const dedup = new Map();
-    for (const p of productData) {
-      const mark = p?.isNew || p?.category === "New Item";
-      if (mark && !dedup.has(p.id)) dedup.set(p.id, p);
-    }
-    return Array.from(dedup.values());
-  }, []);
-  if (!baseNewItems.length) return null;
+  // ✅ 1) 拉 New Items（语言变化也要重新拉）
+  useEffect(() => {
+    let cancelled = false;
 
-  // ② 复制一份用于循环 & 保证溢出
+    fetchProducts({ lang: i18n.language || "en", isNewItem: true })
+      .then((list) => {
+        if (!cancelled) setBaseNewItems(list);
+      })
+      .catch((e) => {
+        console.error(e);
+        if (!cancelled) setBaseNewItems([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [i18n.language]);
+
+  // ✅ 2) 复制一份用于循环（没有数据时返回空数组，但不提前 return）
   const itemsForRender = useMemo(() => {
+    if (!baseNewItems.length) return [];
     let arr = [...baseNewItems, ...baseNewItems];
     while (arr.length < 6) arr = [...arr, ...baseNewItems];
     return arr;
   }, [baseNewItems]);
 
-  // ③ 按平台 + 断点 + 无障碍偏好，动态设定速度
+  // ✅ 3) 动态设定速度
   useEffect(() => {
     const mqs = {
       md: window.matchMedia?.("(min-width: 768px)"),
@@ -47,11 +55,10 @@ export default function NewItemsCarousel() {
     };
 
     const compute = () => {
-      if (mqs.reduce?.matches) return 0.12; // 尊重“减少动态”
-      // 桌面更慢，移动端更快（iOS 再稍快一点）
-      if (mqs.lg?.matches) return isIOS ? 0.35 : 0.18; // ≥1024px
-      if (mqs.md?.matches) return isIOS ? 0.45 : 0.22; // ≥768px
-      return isIOS ? 0.7 : 0.3; // <768px
+      if (mqs.reduce?.matches) return 0.12;
+      if (mqs.lg?.matches) return isIOS ? 0.35 : 0.18;
+      if (mqs.md?.matches) return isIOS ? 0.45 : 0.22;
+      return isIOS ? 0.7 : 0.3;
     };
 
     const apply = () => setSpeed(compute());
@@ -70,13 +77,13 @@ export default function NewItemsCarousel() {
     };
   }, []);
 
-  // ④ 自动滚动（基于上面的动态速度）
+  // ✅ 4) 自动滚动（如果没有 items，就不滚）
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
 
     const step = () => {
-      if (!paused) {
+      if (!paused && itemsForRender.length) {
         accRef.current += speed;
         const dx = Math.floor(accRef.current);
         if (dx > 0) {
@@ -94,9 +101,9 @@ export default function NewItemsCarousel() {
 
     rafRef.current = requestAnimationFrame(step);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [paused, speed]);
+  }, [paused, speed, itemsForRender.length]);
 
-  // ⑤ 惯性滚动结束后再关 snap
+  // ✅ 5) snap debounce（保持你原逻辑）
   const debounceOffSnap = (() => {
     let timer;
     return () => {
@@ -104,6 +111,9 @@ export default function NewItemsCarousel() {
       timer = setTimeout(() => setSnap(false), 250);
     };
   })();
+
+  // ✅ 6) 这里再决定渲染什么（不会影响 hooks 顺序）
+  if (!itemsForRender.length) return null;
 
   return (
     <section className="relative px-4 md:px-6 mt-10 md:mt-16 bg-white">
@@ -145,44 +155,40 @@ export default function NewItemsCarousel() {
         }}
         onScroll={debounceOffSnap}
       >
-        {/* 📱 更紧凑：小屏更小卡片 + 更小间距；中/大屏逐步放大 */}
         <div
           className="inline-flex gap-3 md:gap-5 px-2 py-3 md:py-4"
           style={{ width: "max-content" }}
         >
-          {itemsForRender.map((item, i) => {
-            const eager = i < 6;
-            return (
-              <Link
-                key={`${item.id}-${i}`}
-                to={{
-                  pathname: "/products",
-                  search: `?category=${encodeURIComponent(
-                    item.category
-                  )}&highlight=${encodeURIComponent(item.id)}`,
-                }}
-                // 📱 卡片更窄；md/lg 再放大
-                className="flex-shrink-0 w-[140px] sm:w-[180px] md:w-[220px] lg:w-[260px]"
-                style={{ scrollSnapAlign: snap ? "center" : "none" }}
-              >
-                <div className="bg-base-100 rounded-box shadow hover:shadow-xl transition duration-300 overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-32 sm:h-40 md:h-48 object-contain bg-gray-50"
-                    loading={eager ? "eager" : "lazy"}
-                    decoding="async"
-                    draggable="false"
-                  />
-                  <div className="p-1.5 sm:p-2 md:p-3 text-center text-[10px] sm:text-xs md:text-sm font-medium text-gray-700">
-                    {item.name}
-                  </div>
+          {itemsForRender.map((item, i) => (
+            <Link
+              key={`${item.id}-${i}`}
+              to={{
+                pathname: "/products",
+                search: `?category=${encodeURIComponent(
+                  item.category
+                )}&highlight=${encodeURIComponent(item.id)}`,
+              }}
+              className="flex-shrink-0 w-[140px] sm:w-[180px] md:w-[220px] lg:w-[260px]"
+              style={{ scrollSnapAlign: snap ? "center" : "none" }}
+            >
+              <div className="bg-base-100 rounded-box shadow hover:shadow-xl transition duration-300 overflow-hidden">
+                <img
+                  src={item.imageUrl}
+                  alt={item.name}
+                  className="w-full h-32 sm:h-40 md:h-48 object-contain bg-gray-50"
+                  loading={i < 6 ? "eager" : "lazy"}
+                  decoding="async"
+                  draggable="false"
+                />
+                <div className="p-1.5 sm:p-2 md:p-3 text-center text-[10px] sm:text-xs md:text-sm font-medium text-gray-700">
+                  {item.name}
                 </div>
-              </Link>
-            );
-          })}
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </section>
   );
 }
+
