@@ -4,13 +4,26 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const productsRoutes = require("./routes/productsRoute");
-
 const app = express();
 
-// 允许前端访问（开发时）
-app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
+
+const productsRoutes = require("./routes/productsRoute");
+
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
+// 如果前端和后端不同端口，本地需要允许带 cookie
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+
+const adminAuthRoute = require("./routes/adminAuthRoute");
+app.use("/api/admin/auth", adminAuthRoute);
+
+const adminProductsRoute = require("./routes/adminProductsRoute");
+app.use("/api/admin/products", adminProductsRoute);
+
+const s3Route = require("./routes/s3Route");
+app.use("/api/admin/s3", s3Route);
 
 app.get("/health", (req, res) => res.json({ ok: true }));
 

@@ -6,6 +6,7 @@ import Products from "./pages/Products";
 import Contact from "./pages/Contact";
 import Brand from "./pages/Brand";
 import ScrollManager from "./components/ScrollManager";
+import AdminApp from "./pages/admin/AdminApp";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/products" element={<Products />} />
             <Route path="/brands" element={<Brand />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/admin" element={<AdminApp />} />
           </Routes>
         </main>
         <Footer />
