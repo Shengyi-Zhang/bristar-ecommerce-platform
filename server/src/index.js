@@ -22,15 +22,16 @@ app.use("/api/admin/auth", adminAuthRoute);
 const adminProductsRoute = require("./routes/adminProductsRoute");
 app.use("/api/admin/products", adminProductsRoute);
 
+const adminUsersRoute = require("./routes/adminUsersRoute");
+app.use("/api/admin/users", adminUsersRoute);
+
 const s3Route = require("./routes/s3Route");
 app.use("/api/admin/s3", s3Route);
 
 app.get("/health", (req, res) => res.json({ ok: true }));
 
-// ✅ API 路由
 app.use("/api/products", productsRoutes);
 
-// ✅ 统一错误处理（简单版）
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: "Internal Server Error" });

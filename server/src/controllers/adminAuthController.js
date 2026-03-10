@@ -18,17 +18,34 @@ function setAdminCookie(res, payload) {
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body || {};
-    if (!email || !password) return res.status(400).json({ error: "Missing email or password" });
+    if (!email || !password)
+      return res.status(400).json({ error: "Missing email or password" });
 
-    const admin = await Admin.findOne({ email: String(email).toLowerCase() }).lean();
-    if (!admin || !admin.isActive) return res.status(401).json({ error: "Invalid credentials" });
+    const admin = await Admin.findOne({
+      email: String(email).toLowerCase(),
+    }).lean();
+    if (!admin || !admin.isActive)
+      return res.status(401).json({ error: "Invalid credentials" });
 
     const ok = await bcrypt.compare(password, admin.passwordHash);
     if (!ok) return res.status(401).json({ error: "Invalid credentials" });
 
-    setAdminCookie(res, { adminId: admin._id.toString(), email: admin.email });
+    setAdminCookie(res, {
+      adminId: admin._id.toString(),
+      email: admin.email,
+      role: admin.role,
+      name: admin.name,
+    });
 
-    return res.json({ ok: true, admin: { email: admin.email, name: admin.name } });
+    return res.json({
+      ok: true,
+      admin: {
+        id: admin._id,
+        email: admin.email,
+        name: admin.name,
+        role: admin.role,
+      },
+    });
   } catch (e) {
     next(e);
   }
@@ -40,5 +57,13 @@ exports.logout = async (req, res) => {
 };
 
 exports.me = async (req, res) => {
-  res.json({ ok: true, admin: { adminId: req.admin.adminId, email: req.admin.email } });
+  res.json({
+    ok: true,
+    admin: {
+      adminId: req.admin.adminId,
+      email: req.admin.email,
+      role: req.admin.role,
+      name: req.admin.name || "",
+    },
+  });
 };

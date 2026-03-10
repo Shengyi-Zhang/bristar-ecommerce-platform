@@ -7,8 +7,12 @@ const Admin = require("../models/admin");
   const email = process.argv[2];
   const password = process.argv[3];
   const name = process.argv[4] || "Admin";
+  const role = process.argv[5] === "super" ? "super" : "editor";
+
   if (!email || !password) {
-    console.log("Usage: node scripts/createAdmin.js email password [name]");
+    console.log(
+      "Usage: node scripts/createAdmin.js email password [name] [role]",
+    );
     process.exit(1);
   }
 
@@ -18,11 +22,17 @@ const Admin = require("../models/admin");
   await Admin.updateOne(
     { email: email.toLowerCase() },
     {
-      $set: { email: email.toLowerCase(), passwordHash, name, isActive: true },
+      $set: {
+        email: email.toLowerCase(),
+        passwordHash,
+        name,
+        role,
+        isActive: true,
+      },
     },
     { upsert: true },
   );
 
-  console.log("Admin created/updated:", email);
+  console.log("Admin created/updated:", email, "role", role);
   process.exit(0);
 })();

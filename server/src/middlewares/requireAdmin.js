@@ -6,7 +6,7 @@ module.exports = function requireAdmin(req, res, next) {
     if (!token) return res.status(401).json({ error: "Unauthorized" });
 
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    req.admin = payload; // { adminId, email }
+    req.admin = payload;
     return next();
   } catch (e) {
     return res.status(401).json({ error: "Unauthorized" });
