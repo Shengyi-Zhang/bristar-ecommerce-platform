@@ -2,7 +2,7 @@ const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 async function request(path, opts = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
-    credentials: "include", // ✅ cookie
+    credentials: "include", // cookie
     headers: { "Content-Type": "application/json", ...(opts.headers || {}) },
     ...opts,
   });
@@ -44,5 +44,10 @@ export const adminS3 = {
     request("/api/admin/s3/presign-put", {
       method: "POST",
       body: JSON.stringify({ filename, contentType }),
+    }),
+  deleteObject: (key) =>
+    request("/api/admin/s3/delete", {
+      method: "POST",
+      body: JSON.stringify({ key }),
     }),
 };

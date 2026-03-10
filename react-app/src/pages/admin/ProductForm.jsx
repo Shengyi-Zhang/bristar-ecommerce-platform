@@ -7,6 +7,7 @@ const emptyProduct = {
   code: "",
   category: "",
   isNewItem: false,
+  imageKey: "",
   name: { en: "", zh: "" },
   desc: { en: "", zh: "" },
   imageUrl: "",
@@ -19,6 +20,7 @@ function normalizeProduct(p) {
     code: base.code || "",
     category: base.category || "",
     isNewItem: !!base.isNewItem,
+    imageKey: base.imageKey || "",
     name: {
       en: base.name?.en || "",
       zh: base.name?.zh || "",
@@ -90,7 +92,7 @@ export default function ProductForm({
     });
 
     if (!putRes.ok) throw new Error("S3 upload failed");
-    return presign.publicUrl; // 用 publicUrl 回写到 imageUrl
+    return { publicUrl: presign.publicUrl, key: presign.key };
   };
 
   const handlePickFile = async (e) => {
@@ -100,8 +102,20 @@ export default function ProductForm({
     try {
       setErr("");
       setUploading(true);
-      const publicUrl = await uploadToS3(file);
+      
+      // Delete old image from S3 if exists
+      const oldKey = form.imageKey;
+      const { publicUrl, key } = await uploadToS3(file);
       update("imageUrl", publicUrl);
+      update("imageKey", key);
+
+      if (oldKey) {
+        try {
+          await adminS3.deleteObject(oldKey);
+        } catch (e) {
+          console.warn("Failed to delete old S3 object:", oldKey, e?.message);
+        } 
+      }
     } catch (e2) {
       console.error(e2);
       setErr("Upload failed. Check S3 settings/credentials.");

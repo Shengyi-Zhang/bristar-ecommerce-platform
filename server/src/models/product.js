@@ -17,7 +17,8 @@ const ProductSchema = new mongoose.Schema(
     code: { type: String, default: '' },
     category: { type: String, required: true, index: true },
     isNewItem: { type: Boolean, default: false, index: true },
-
+    imageKey: { type: String, default: "" },
+    
     name: { type: LocalizedStringSchema, default: () => ({}) },
     desc: { type: LocalizedStringSchema, default: () => ({}) },
 
