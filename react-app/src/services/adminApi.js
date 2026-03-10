@@ -52,6 +52,24 @@ export const adminS3 = {
     }),
 };
 
+export const adminUsers = {
+  list: () => request("/api/admin/users"),
+  create: (payload) =>
+    request("/api/admin/users", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  update: (id, payload) =>
+    request(`/api/admin/users/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
+  remove: (id) =>
+    request(`/api/admin/users/${id}`, {
+      method: "DELETE",
+    }),
+};
+
 export const productsApi = {
   categories: () => request("/api/products/categories"),
 };

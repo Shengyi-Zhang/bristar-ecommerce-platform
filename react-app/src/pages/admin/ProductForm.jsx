@@ -1,7 +1,5 @@
-// src/pages/admin/ProductForm.jsx
 import { useEffect, useMemo, useState } from "react";
-import { adminProducts, adminS3 } from "../../services/adminApi";
-import { productsApi } from "../../services/adminApi";
+import { adminProducts, adminS3, productsApi } from "../../services/adminApi";
 
 const emptyProduct = {
   slug: "",
@@ -59,7 +57,10 @@ export default function ProductForm({
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    productsApi.categories().then((res) => setCategories(res.categories));
+    productsApi
+      .categories()
+      .then((res) => setCategories(res.categories || []))
+      .catch(console.error);
   }, []);
 
   useEffect(() => {
@@ -75,7 +76,6 @@ export default function ProductForm({
   const update = (path, value) => {
     setForm((prev) => {
       const next = structuredClone(prev);
-      // simple path setter: "name.en" / "desc.zh"
       const keys = path.split(".");
       let cur = next;
       for (let i = 0; i < keys.length - 1; i++) cur = cur[keys[i]];
@@ -85,22 +85,20 @@ export default function ProductForm({
   };
 
   const validate = () => {
-    if (!form.slug.trim()) return "slug is required";
-    if (!form.category.trim()) return "category is required";
-
-    if (!form.name.en.trim() && !form.name.zh.trim())
-      return "name.en or name.zh is required";
+    if (!form.slug.trim()) return "Slug is required.";
+    if (!form.category.trim()) return "Category is required.";
+    if (!form.name.en.trim() && !form.name.zh.trim()) {
+      return "At least one product name is required.";
+    }
     return "";
   };
 
   const uploadToS3 = async (file) => {
-    // 1) presign
     const presign = await adminS3.presignPut(
       file.name,
       file.type || "application/octet-stream",
     );
 
-    // 2) PUT upload
     const putRes = await fetch(presign.uploadUrl, {
       method: "PUT",
       headers: { "Content-Type": file.type || "application/octet-stream" },
@@ -119,22 +117,22 @@ export default function ProductForm({
       setErr("");
       setUploading(true);
 
-      // Delete old image from S3 if exists
       const oldKey = form.imageKey;
       const { publicUrl, key } = await uploadToS3(file);
+
       update("imageUrl", publicUrl);
       update("imageKey", key);
 
       if (oldKey) {
         try {
           await adminS3.deleteObject(oldKey);
-        } catch (e) {
-          console.warn("Failed to delete old S3 object:", oldKey, e?.message);
+        } catch (e2) {
+          console.warn("Failed to delete old S3 object:", oldKey, e2?.message);
         }
       }
     } catch (e2) {
       console.error(e2);
-      setErr("Upload failed. Check S3 settings/credentials.");
+      setErr("Upload failed. Please check S3 settings and permissions.");
     } finally {
       setUploading(false);
       e.target.value = "";
@@ -155,65 +153,65 @@ export default function ProductForm({
       if (mode === "create") {
         await adminProducts.create(form);
       } else {
-        // slug，编辑时禁用 slug 输入
         await adminProducts.update(form.slug, form);
       }
 
       onSaved?.();
     } catch (e) {
       console.error(e);
-      setErr("Save failed. Check console/network.");
+      setErr("Save failed. Please check the console/network tab.");
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div
-      style={{
-        border: "1px solid #ddd",
-        borderRadius: 12,
-        padding: 16,
-        background: "#fff",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 12,
-          alignItems: "center",
-        }}
-      >
-        <h3 style={{ fontSize: 20, fontWeight: 800 }}>{title}</h3>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button onClick={onCancel} disabled={saving || uploading}>
+    <div>
+      {/* Header */}
+      <div className="mb-6 flex flex-col gap-4 border-b border-gray-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h3 className="text-2xl font-semibold tracking-tight text-gray-900">
+            {title}
+          </h3>
+          <p className="mt-1 text-sm text-gray-500">
+            {mode === "create"
+              ? "Add a new product to your catalog."
+              : "Update product details and media."}
+          </p>
+        </div>
+
+        <div className="flex gap-3">
+          <button
+            onClick={onCancel}
+            disabled={saving || uploading}
+            className="rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+          >
             Cancel
           </button>
-          <button onClick={handleSave} disabled={saving || uploading}>
-            {saving ? "Saving..." : "Save"}
+          <button
+            onClick={handleSave}
+            disabled={saving || uploading}
+            className="rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {saving ? "Saving..." : "Save Product"}
           </button>
         </div>
       </div>
 
       {err ? (
-        <div style={{ marginTop: 10, color: "crimson" }}>{err}</div>
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {err}
+        </div>
       ) : null}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 12,
-          marginTop: 12,
-        }}
-      >
-        <Field label="Slug (unique)" required>
+      {/* Form */}
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <Field label="Slug" required>
           <input
             value={form.slug}
             disabled
-            placeholder="auto-generated from Name (EN)"
-            style={{ width: "100%", padding: 10, background: "#f7f7f7" }}
+            placeholder="Auto-generated from Name (EN)"
+            className="w-full rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-700 outline-none"
           />
         </Field>
 
@@ -222,7 +220,7 @@ export default function ProductForm({
             value={form.code}
             onChange={(e) => update("code", e.target.value)}
             placeholder="e.g. AGTH101"
-            style={{ width: "100%", padding: 10 }}
+            className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900"
           />
         </Field>
 
@@ -230,10 +228,9 @@ export default function ProductForm({
           <select
             value={form.category}
             onChange={(e) => update("category", e.target.value)}
-            style={{ width: "100%", padding: 10 }}
+            className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900"
           >
             <option value="">Select category</option>
-
             {categories.map((c) => (
               <option key={c} value={c}>
                 {c}
@@ -242,23 +239,16 @@ export default function ProductForm({
           </select>
         </Field>
 
-        <Field label="New Item?">
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              padding: 10,
-              border: "1px solid #ddd",
-              borderRadius: 8,
-            }}
-          >
+        <Field label="New Item">
+          <label className="flex h-[42px] items-center gap-2 rounded-xl border border-gray-300 px-3">
             <input
               type="checkbox"
               checked={form.isNewItem}
               onChange={(e) => update("isNewItem", e.target.checked)}
             />
-            <span>{form.isNewItem ? "true" : "false"}</span>
+            <span className="text-sm text-gray-700">
+              {form.isNewItem ? "Yes" : "No"}
+            </span>
           </label>
         </Field>
 
@@ -274,11 +264,11 @@ export default function ProductForm({
                   ...prev.name,
                   en: val,
                 },
-                ...(mode === "create" ? { slug: slugify(val) } : {}), // 创建时自动生成 slug
+                ...(mode === "create" ? { slug: slugify(val) } : {}),
               }));
             }}
-            placeholder="English name"
-            style={{ width: "100%", padding: 10 }}
+            placeholder="English product name"
+            className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900"
           />
         </Field>
 
@@ -287,7 +277,7 @@ export default function ProductForm({
             value={form.name.zh}
             onChange={(e) => update("name.zh", e.target.value)}
             placeholder="中文名称"
-            style={{ width: "100%", padding: 10 }}
+            className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900"
           />
         </Field>
 
@@ -295,8 +285,8 @@ export default function ProductForm({
           <input
             value={form.desc.en}
             onChange={(e) => update("desc.en", e.target.value)}
-            placeholder="e.g. 24can/320ml"
-            style={{ width: "100%", padding: 10 }}
+            placeholder="e.g. 24can / 320ml"
+            className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900"
           />
         </Field>
 
@@ -304,8 +294,8 @@ export default function ProductForm({
           <input
             value={form.desc.zh}
             onChange={(e) => update("desc.zh", e.target.value)}
-            placeholder="例如：24罐/320毫升"
-            style={{ width: "100%", padding: 10 }}
+            placeholder="例如：24罐 / 320毫升"
+            className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900"
           />
         </Field>
 
@@ -313,60 +303,76 @@ export default function ProductForm({
           <input
             value={form.imageUrl}
             onChange={(e) => update("imageUrl", e.target.value)}
-            placeholder="S3 public URL or /assets/..."
-            style={{ width: "100%", padding: 10 }}
+            placeholder="S3 public URL"
+            className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none transition focus:border-gray-900"
           />
         </Field>
 
-        <Field label="Upload Image to S3">
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handlePickFile}
-              disabled={uploading}
-            />
-            {uploading ? <span>Uploading...</span> : null}
-          </div>
-          <div style={{ fontSize: 12, color: "#666", marginTop: 6 }}>
-            Upload → auto fills Image URL
-          </div>
+        <Field label="Image Key (S3)">
+          <input
+            value={form.imageKey}
+            onChange={(e) => update("imageKey", e.target.value)}
+            placeholder="products/..."
+            className="w-full rounded-xl border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-700 outline-none"
+          />
         </Field>
+
+        <div className="lg:col-span-2">
+          <Field label="Upload Image to S3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePickFile}
+                disabled={uploading}
+                className="block w-full text-sm text-gray-600 file:mr-4 file:rounded-xl file:border-0 file:bg-gray-900 file:px-4 file:py-2.5 file:text-sm file:font-medium file:text-white hover:file:bg-black disabled:opacity-60"
+              />
+              {uploading ? (
+                <span className="text-sm text-gray-500">Uploading...</span>
+              ) : null}
+            </div>
+            <p className="mt-2 text-xs text-gray-500">
+              Uploading will automatically fill the Image URL and Image Key.
+            </p>
+          </Field>
+        </div>
       </div>
 
+      {/* Preview */}
       {form.imageUrl ? (
-        <div
-          style={{
-            marginTop: 14,
-            display: "flex",
-            gap: 14,
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              width: 140,
-              height: 110,
-              background: "#f7f7f7",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 8,
-              overflow: "hidden",
-            }}
-          >
-            <img
-              src={form.imageUrl}
-              alt="preview"
-              style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-                objectFit: "contain",
-              }}
-            />
+        <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 p-4">
+          <div className="mb-3 text-sm font-medium text-gray-700">
+            Image Preview
           </div>
-          <div style={{ fontSize: 12, color: "#666", wordBreak: "break-all" }}>
-            {form.imageUrl}
+
+          <div className="flex flex-col gap-4 md:flex-row md:items-center">
+            <div className="flex h-40 w-full max-w-xs items-center justify-center overflow-hidden rounded-2xl border border-gray-200 bg-white">
+              <img
+                src={form.imageUrl}
+                alt="preview"
+                className="h-full w-full object-contain"
+              />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <div className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500">
+                Public URL
+              </div>
+              <div className="break-all rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-600">
+                {form.imageUrl}
+              </div>
+
+              {form.imageKey ? (
+                <>
+                  <div className="mb-2 mt-4 text-xs font-medium uppercase tracking-wide text-gray-500">
+                    Image Key
+                  </div>
+                  <div className="break-all rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-600">
+                    {form.imageKey}
+                  </div>
+                </>
+              ) : null}
+            </div>
           </div>
         </div>
       ) : null}
@@ -377,9 +383,10 @@ export default function ProductForm({
 function Field({ label, required, children }) {
   return (
     <div>
-      <div style={{ fontWeight: 700, marginBottom: 6 }}>
-        {label} {required ? <span style={{ color: "crimson" }}>*</span> : null}
-      </div>
+      <label className="mb-1.5 block text-sm font-medium text-gray-700">
+        {label}
+        {required ? <span className="ml-1 text-red-500">*</span> : null}
+      </label>
       {children}
     </div>
   );
