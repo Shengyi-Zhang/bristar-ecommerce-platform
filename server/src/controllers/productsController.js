@@ -48,7 +48,7 @@ const getCategories = async (req, res, next) => {
     // distinct 会返回去重后的分类数组
     const categories = await Product.distinct("category");
 
-    // 排序：可选。简单按字母排序；你也可以以后改成自定义顺序
+    
     categories.sort((a, b) => String(a).localeCompare(String(b)));
 
     return res.json({ categories });

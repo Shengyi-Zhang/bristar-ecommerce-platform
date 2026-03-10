@@ -51,3 +51,7 @@ export const adminS3 = {
       body: JSON.stringify({ key }),
     }),
 };
+
+export const productsApi = {
+  categories: () => request("/api/products/categories"),
+};

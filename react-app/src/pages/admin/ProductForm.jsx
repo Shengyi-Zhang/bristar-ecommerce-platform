@@ -1,6 +1,7 @@
 // src/pages/admin/ProductForm.jsx
 import { useEffect, useMemo, useState } from "react";
 import { adminProducts, adminS3 } from "../../services/adminApi";
+import { productsApi } from "../../services/adminApi";
 
 const emptyProduct = {
   slug: "",
@@ -12,6 +13,16 @@ const emptyProduct = {
   desc: { en: "", zh: "" },
   imageUrl: "",
 };
+
+function slugify(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-");
+}
 
 function normalizeProduct(p) {
   const base = p || {};
@@ -45,6 +56,11 @@ export default function ProductForm({
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [err, setErr] = useState("");
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    productsApi.categories().then((res) => setCategories(res.categories));
+  }, []);
 
   useEffect(() => {
     if (mode === "edit") setForm(normalizeProduct(initialProduct));
@@ -102,7 +118,7 @@ export default function ProductForm({
     try {
       setErr("");
       setUploading(true);
-      
+
       // Delete old image from S3 if exists
       const oldKey = form.imageKey;
       const { publicUrl, key } = await uploadToS3(file);
@@ -114,7 +130,7 @@ export default function ProductForm({
           await adminS3.deleteObject(oldKey);
         } catch (e) {
           console.warn("Failed to delete old S3 object:", oldKey, e?.message);
-        } 
+        }
       }
     } catch (e2) {
       console.error(e2);
@@ -195,10 +211,9 @@ export default function ProductForm({
         <Field label="Slug (unique)" required>
           <input
             value={form.slug}
-            disabled={mode === "edit"} // slug 当主键，编辑不允许改
-            onChange={(e) => update("slug", e.target.value)}
-            placeholder="e.g. lotus-pickled-red-ginger"
-            style={{ width: "100%", padding: 10 }}
+            disabled
+            placeholder="auto-generated from Name (EN)"
+            style={{ width: "100%", padding: 10, background: "#f7f7f7" }}
           />
         </Field>
 
@@ -212,12 +227,19 @@ export default function ProductForm({
         </Field>
 
         <Field label="Category" required>
-          <input
+          <select
             value={form.category}
             onChange={(e) => update("category", e.target.value)}
-            placeholder='e.g. "Beverage"'
             style={{ width: "100%", padding: 10 }}
-          />
+          >
+            <option value="">Select category</option>
+
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
         </Field>
 
         <Field label="New Item?">
@@ -243,7 +265,18 @@ export default function ProductForm({
         <Field label="Name (EN)" required>
           <input
             value={form.name.en}
-            onChange={(e) => update("name.en", e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+
+              setForm((prev) => ({
+                ...prev,
+                name: {
+                  ...prev.name,
+                  en: val,
+                },
+                ...(mode === "create" ? { slug: slugify(val) } : {}), // 创建时自动生成 slug
+              }));
+            }}
             placeholder="English name"
             style={{ width: "100%", padding: 10 }}
           />
