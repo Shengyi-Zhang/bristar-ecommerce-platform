@@ -19,6 +19,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://bristar-ecommerce-platform-mfoqwfdxq.vercel.app",
+      "https://bristar-ecommerce-platform.vercel.app",
     ],
     credentials: true,
   }),
