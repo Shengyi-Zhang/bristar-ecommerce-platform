@@ -64,6 +64,8 @@ exports.logout = async (req, res) => {
 };
 
 exports.me = async (req, res) => {
+  console.log("ME cookies:", req.cookies);
+  console.log("ME cookie header:", req.headers.cookie);
   res.json({
     ok: true,
     admin: {
