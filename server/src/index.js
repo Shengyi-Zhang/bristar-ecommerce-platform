@@ -14,7 +14,15 @@ const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
 // 如果前端和后端不同端口，本地需要允许带 cookie
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://bristar-ecommerce-platform-87rehhvbg.vercel.app/",
+    ],
+    credentials: true,
+  }),
+);
 
 const adminAuthRoute = require("./routes/adminAuthRoute");
 app.use("/api/admin/auth", adminAuthRoute);
