@@ -53,7 +53,14 @@ exports.login = async (req, res, next) => {
 };
 
 exports.logout = async (req, res) => {
-  res.clearCookie("admin_token");
+  res.clearCookie(
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    }),
+  );
   res.json({ ok: true });
 };
 
