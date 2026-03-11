@@ -9,8 +9,9 @@ function setAdminCookie(res, payload) {
 
   res.cookie("admin_token", token, {
     httpOnly: true,
-    sameSite: "lax",
-    secure: false, // 部署 https 后改 true
+    sameSite: "none",
+    secure: true, // 部署 https 后改 true
+    path: "/",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 }
