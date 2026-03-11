@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://bristar-ecommerce-platform-87rehhvbg.vercel.app",
+      "https://bristar-ecommerce-platform.vercel.app",
     ],
     credentials: true,
   }),
